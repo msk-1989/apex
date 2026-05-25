@@ -28,12 +28,12 @@ export async function GET(request: NextRequest) {
       ...(outOfStock && {}),
       ...(search && {
         OR: [
-          { batchNo: { contains: search } },
+          { batchNo: { contains: search, mode: 'insensitive' } },
           { medicine: {
             isActive: true,
             OR: [
-              { name: { contains: search } },
-              { genericName: { contains: search } },
+              { name: { contains: search, mode: 'insensitive' } },
+              { genericName: { contains: search, mode: 'insensitive' } },
             ],
           }},
         ],

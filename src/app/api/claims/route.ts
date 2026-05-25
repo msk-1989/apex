@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
       ...(claimType && { claimType }),
       ...(search && {
         OR: [
-          { creditNoteNo: { contains: search } },
-          { notes: { contains: search } },
-          { supplier: { name: { contains: search } } },
+          { creditNoteNo: { contains: search, mode: 'insensitive' } },
+          { notes: { contains: search, mode: 'insensitive' } },
+          { supplier: { name: { contains: search, mode: 'insensitive' } } },
         ],
       }),
     }

@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
       ...(scope && { scope }),
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { description: { contains: search } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
         ],
       }),
     }

@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
     const where: Prisma.CustomerWhereInput = {
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { phone: { contains: search } },
-          { email: { contains: search } },
-          { gstNo: { contains: search } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+          { gstNo: { contains: search, mode: 'insensitive' } },
         ],
       }),
       ...(type && { type }),

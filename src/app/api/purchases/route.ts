@@ -15,9 +15,9 @@ export async function GET(request: NextRequest) {
     const where: Prisma.PurchaseOrderWhereInput = {
       ...(search && {
         OR: [
-          { invoiceNo: { contains: search } },
-          { supplier: { name: { contains: search } } },
-          { notes: { contains: search } },
+          { invoiceNo: { contains: search, mode: 'insensitive' } },
+          { supplier: { name: { contains: search, mode: 'insensitive' } } },
+          { notes: { contains: search, mode: 'insensitive' } },
         ],
       }),
       ...(status && { status }),

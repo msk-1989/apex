@@ -463,3 +463,21 @@ Stage Summary:
 - GST rates: 5%, 12%, 18% (from Excel data)
 - Import script: prisma/import-inventory.ts (reusable for future imports)
 - API verified: /api/medicines returns correct data with search and pagination
+---
+Task ID: 1
+Agent: main
+Task: Fix medicine search not fetching
+
+Work Log:
+- Diagnosed root cause: shell environment had stale `DATABASE_URL=file:/home/z/my-project/db/custom.db` (SQLite leftover from previous session) which overrides the `.env` file's PostgreSQL (Neon) URL
+- This caused Prisma to fail with "the URL must start with the protocol `postgresql://` or `postgres://`" on every medicine query
+- Fixed `src/lib/db.ts` to read DATABASE_URL directly from `.env` file, bypassing stale shell env vars
+- Fixed case-insensitive search: added `mode: 'insensitive'` to ALL `contains` filters across 10 API route files (25+ filters total)
+- Files updated: medicines, inventory, advanced-search, customers, sales, purchases, schemes, delivery, rate-contracts, claims
+
+Stage Summary:
+- Root cause: Stale shell env var `DATABASE_URL=file:/home/z/my-project/db/custom.db` overriding `.env` PostgreSQL URL
+- Fix 1: `src/lib/db.ts` now reads `.env` file directly when process.env DATABASE_URL is not a PostgreSQL URL
+- Fix 2: All Prisma `contains` search filters now use `mode: 'insensitive'` for case-insensitive matching
+- Search now works correctly: "cap" matches "36-D CAP", etc.
+- Lint passes clean

@@ -20,14 +20,14 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.DeliveryWhereInput = {
       ...(status && { status }),
-      ...(deliveryBoy && { deliveryBoy: { contains: deliveryBoy } }),
+      ...(deliveryBoy && { deliveryBoy: { contains: deliveryBoy, mode: 'insensitive' } }),
       ...(search && {
         OR: [
-          { patientName: { contains: search } },
-          { address: { contains: search } },
-          { phone: { contains: search } },
-          { customer: { name: { contains: search } } },
-          { invoice: { invoiceNo: { contains: search } } },
+          { patientName: { contains: search, mode: 'insensitive' } },
+          { address: { contains: search, mode: 'insensitive' } },
+          { phone: { contains: search, mode: 'insensitive' } },
+          { customer: { name: { contains: search, mode: 'insensitive' } } },
+          { invoice: { invoiceNo: { contains: search, mode: 'insensitive' } } },
         ],
       }),
     }

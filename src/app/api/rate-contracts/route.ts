@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
       ...(status && { status }),
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { customer: { name: { contains: search } } },
-          { notes: { contains: search } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { customer: { name: { contains: search, mode: 'insensitive' } } },
+          { notes: { contains: search, mode: 'insensitive' } },
         ],
       }),
     }

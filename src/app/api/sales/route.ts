@@ -18,10 +18,10 @@ export async function GET(request: NextRequest) {
     const where: Prisma.SalesInvoiceWhereInput = {
       ...(search && {
         OR: [
-          { invoiceNo: { contains: search } },
-          { customer: { name: { contains: search } } },
-          { doctorName: { contains: search } },
-          { prescriptionNo: { contains: search } },
+          { invoiceNo: { contains: search, mode: 'insensitive' } },
+          { customer: { name: { contains: search, mode: 'insensitive' } } },
+          { doctorName: { contains: search, mode: 'insensitive' } },
+          { prescriptionNo: { contains: search, mode: 'insensitive' } },
         ],
       }),
       ...(status && { status }),

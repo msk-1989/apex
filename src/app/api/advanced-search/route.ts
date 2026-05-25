@@ -20,30 +20,30 @@ export async function GET(request: NextRequest) {
     if (field && field !== 'all') {
       // Search specific field
       const fieldMap: Record<string, Prisma.MedicineWhereInput> = {
-        name: { name: { contains: q } },
-        salt: { saltComposition: { contains: q } },
+        name: { name: { contains: q, mode: 'insensitive' } },
+        salt: { saltComposition: { contains: q, mode: 'insensitive' } },
         barcode: { barcode: { equals: q } },
-        company: { manufacturer: { name: { contains: q } } },
-        composition: { saltComposition: { contains: q } },
-        rack: { rackNo: { contains: q } },
-        genericName: { genericName: { contains: q } },
+        company: { manufacturer: { name: { contains: q, mode: 'insensitive' } } },
+        composition: { saltComposition: { contains: q, mode: 'insensitive' } },
+        rack: { rackNo: { contains: q, mode: 'insensitive' } },
+        genericName: { genericName: { contains: q, mode: 'insensitive' } },
       }
 
-      searchConditions = fieldMap[field] || { name: { contains: q } }
+      searchConditions = fieldMap[field] || { name: { contains: q, mode: 'insensitive' } }
     } else {
       // Search ALL fields simultaneously with partial matching
       searchConditions = {
         OR: [
-          { name: { contains: q } },
-          { genericName: { contains: q } },
-          { saltComposition: { contains: q } },
+          { name: { contains: q, mode: 'insensitive' } },
+          { genericName: { contains: q, mode: 'insensitive' } },
+          { saltComposition: { contains: q, mode: 'insensitive' } },
           { barcode: { equals: q } },
-          { manufacturer: { name: { contains: q } } },
-          { category: { name: { contains: q } } },
-          { rackNo: { contains: q } },
-          { hsnCode: { contains: q } },
-          { strength: { contains: q } },
-          { form: { contains: q } },
+          { manufacturer: { name: { contains: q, mode: 'insensitive' } } },
+          { category: { name: { contains: q, mode: 'insensitive' } } },
+          { rackNo: { contains: q, mode: 'insensitive' } },
+          { hsnCode: { contains: q, mode: 'insensitive' } },
+          { strength: { contains: q, mode: 'insensitive' } },
+          { form: { contains: q, mode: 'insensitive' } },
         ],
       }
     }

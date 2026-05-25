@@ -17,9 +17,9 @@ export async function GET(request: NextRequest) {
       isActive: true,
       ...(search && {
         OR: [
-          { name: { contains: search } },
-          { genericName: { contains: search } },
-          { saltComposition: { contains: search } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { genericName: { contains: search, mode: 'insensitive' } },
+          { saltComposition: { contains: search, mode: 'insensitive' } },
         ],
       }),
       ...(categoryId && { categoryId }),
