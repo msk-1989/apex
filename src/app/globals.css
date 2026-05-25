@@ -1,0 +1,567 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MARG ERP 9+ EXACT THEME — Pharmacy Management
+   ═══════════════════════════════════════════════════════ */
+
+:root {
+  --radius: 0px;
+  /* MARG exact color palette from real software */
+  --marg-navy:        #003366;
+  --marg-dark-blue:   #003366;
+  --marg-med-blue:    #336699;
+  --marg-light-blue:  #6699CC;
+  --marg-sky:         #D4E5F7;
+  --marg-highlight:   #FFFFCC;
+  --marg-white:       #FFFFFF;
+  --marg-off-white:   #F0F0F0;
+  --marg-light-gray:  #E8E8E8;
+  --marg-gray:        #C0C0C0;
+  --marg-dark-gray:   #808080;
+  --marg-darker-gray: #404040;
+  --marg-black:       #000000;
+  --marg-selected:    #003366;
+  --marg-selected-bg: #316AC5;
+  --marg-active-bg:   #CCDDEF;
+  --marg-row-alt:     #F5F8FC;
+  --marg-row-hover:   #E8EFF8;
+  --marg-green:       #006600;
+  --marg-red:         #CC0000;
+  --marg-orange:      #CC6600;
+  --marg-yellow-bg:   #FFFDE6;
+
+  /* Tailwind mapped tokens */
+  --background: #E8E8E8;
+  --foreground: #000000;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --popover: #FFFFFF;
+  --popover-foreground: #000000;
+  --primary: #003366;
+  --primary-foreground: #FFFFFF;
+  --secondary: #E8E8E8;
+  --secondary-foreground: #000000;
+  --muted: #F0F0F0;
+  --muted-foreground: #808080;
+  --accent: #CCDDEF;
+  --accent-foreground: #003366;
+  --destructive: #CC0000;
+  --border: #C0C0C0;
+  --input: #C0C0C0;
+  --ring: #316AC5;
+  --chart-1: #003366;
+  --chart-2: #336699;
+  --chart-3: #6699CC;
+  --chart-4: #996633;
+  --chart-5: #006633;
+}
+
+@layer base {
+  * {
+    border-radius: 0 !important;
+    box-sizing: border-box;
+  }
+  body {
+    background: #E8E8E8;
+    color: #000000;
+    font-family: Tahoma, 'Segoe UI', Verdana, Geneva, sans-serif;
+    font-size: 8pt;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+  }
+  input, select, textarea, button {
+    font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+    font-size: 8pt;
+  }
+}
+
+/* ═══ SCROLLBARS — Windows 7 native style ═══ */
+::-webkit-scrollbar { width: 17px; height: 17px; }
+::-webkit-scrollbar-track { background: #F0F0F0; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #C0C0C0 0%, #D8D8D8 40%, #F0F0F0 50%, #D8D8D8 60%, #C0C0C0 100%);
+  border: 1px solid #A0A0A0;
+}
+::-webkit-scrollbar-thumb:hover { background: #A0A0A0; }
+::-webkit-scrollbar-button {
+  display: block;
+  height: 17px; width: 17px;
+  background: #E8E8E8;
+  border: 1px solid #A0A0A0;
+}
+::-webkit-scrollbar-corner { background: #F0F0F0; }
+
+/* ═══ MARG TITLE BAR — solid dark navy ═══ */
+.marg-titlebar {
+  background: #003366;
+  color: #FFFFFF;
+  font-size: 8pt;
+  font-weight: 700;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  height: 24px;
+  user-select: none;
+}
+
+/* ═══ SECOND BAR — module name bar (medium blue) ═══ */
+.marg-modulebar {
+  background: linear-gradient(180deg, #6699CC 0%, #4D88BB 50%, #336699 100%);
+  color: #FFFFFF;
+  font-size: 8pt;
+  font-weight: 600;
+  padding: 3px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 22px;
+  user-select: none;
+}
+
+/* ═══ MENU BAR ═══ */
+.marg-menubar {
+  background: #F0F0F0;
+  border-bottom: 1px solid #808080;
+  padding: 1px 0;
+  display: flex;
+  height: 22px;
+  align-items: center;
+  user-select: none;
+}
+.marg-menubar button {
+  padding: 2px 8px;
+  font-size: 8pt;
+  color: #000000;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  height: 20px;
+}
+.marg-menubar button:hover,
+.marg-menubar button.active {
+  background: #CCDDEF;
+  border-color: #316AC5 #E8EFF8 #E8EFF8 #316AC5;
+}
+
+/* ═══ TOOLBAR ═══ */
+.marg-toolbar {
+  background: #F0F0F0;
+  border-bottom: 1px solid #808080;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  height: 28px;
+  user-select: none;
+}
+.marg-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 22px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.marg-tool-btn:hover {
+  border-color: #E8EFF8 #316AC5 #316AC5 #E8EFF8;
+  background: #CCDDEF;
+}
+.marg-tool-btn:active {
+  border-color: #316AC5 #E8EFF8 #E8EFF8 #316AC5;
+}
+.marg-tool-btn span, .marg-tool-btn svg {
+  width: 16px; height: 16px;
+}
+.marg-tool-sep {
+  width: 2px; height: 20px;
+  border-left: 1px solid #808080;
+  border-right: 1px solid #FFFFFF;
+  margin: 0 3px;
+}
+
+/* ═══ TREE VIEW — left sidebar ═══ */
+.marg-treeview {
+  background: #FFFFFF;
+  border: 1px solid #808080;
+  overflow-y: auto;
+  font-size: 8pt;
+}
+.marg-tree-node {
+  display: flex;
+  align-items: center;
+  padding: 1px 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  height: 18px;
+  gap: 3px;
+}
+.marg-tree-node:hover { background: #E8EFF8; }
+.marg-tree-node.selected {
+  background: #316AC5;
+  color: #FFFFFF;
+}
+.marg-tree-node.folder { font-weight: 700; }
+.marg-tree-node .tree-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.marg-tree-indent { width: 16px; flex-shrink: 0; display: inline-block; }
+
+/* ═══ DATA GRID — Windows DataGridView style ═══ */
+.marg-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8pt;
+  background: #FFFFFF;
+}
+.marg-grid thead th {
+  background: linear-gradient(180deg, #5A8ABF 0%, #336699 50%, #2D5A8A 100%);
+  color: #FFFFFF;
+  border: 1px solid #2D5A8A;
+  padding: 3px 5px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 8pt;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  letter-spacing: 0.01em;
+}
+.marg-grid thead th:first-child { border-left: 1px solid #2D5A8A; }
+.marg-grid tbody td {
+  border-right: 1px solid #D4D4D4;
+  border-bottom: 1px solid #D4D4D4;
+  padding: 2px 5px;
+  font-size: 8pt;
+  vertical-align: middle;
+  height: 20px;
+}
+.marg-grid tbody tr:nth-child(even) { background: #F5F8FC; }
+.marg-grid tbody tr:hover { background: #CCDDEF; }
+.marg-grid tbody tr.selected {
+  background: #316AC5 !important;
+  color: #FFFFFF;
+}
+.marg-grid tbody tr.selected td { color: #FFFFFF; }
+
+/* ═══ BUTTONS — Windows Forms style ═══ */
+.marg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 2px 12px;
+  font-size: 8pt;
+  font-weight: 400;
+  background: linear-gradient(180deg, #F6F6F6 0%, #E0E0E0 45%, #D0D0D0 55%, #E8E8E8 100%);
+  color: #000000;
+  border: 1px solid #003366;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  height: 23px;
+  min-width: 50px;
+}
+.marg-btn:hover { background: linear-gradient(180deg, #FFFFFF 0%, #E8E8E8 45%, #D8D8D8 55%, #F0F0F0 100%); }
+.marg-btn:active { background: linear-gradient(180deg, #D0D0D0 0%, #E0E0E0 45%, #F0F0F0 55%, #E0E0E0 100%); }
+.marg-btn-blue {
+  background: linear-gradient(180deg, #6699CC 0%, #336699 50%, #2D5A8A 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border: 1px solid #1A3355;
+}
+.marg-btn-blue:hover { background: linear-gradient(180deg, #7AABDD 0%, #4D88BB 50%, #336699 100%); }
+.marg-btn-green {
+  background: linear-gradient(180deg, #66AA66 0%, #338833 50%, #2D772D 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border: 1px solid #1A441A;
+}
+.marg-btn-red {
+  background: linear-gradient(180deg, #DD6666 0%, #BB3333 50%, #AA2D2D 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  border: 1px solid #551A1A;
+}
+
+/* ═══ STATUS BAR ═══ */
+.marg-statusbar {
+  background: #003366;
+  color: #FFFFFF;
+  font-size: 8pt;
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  height: 20px;
+  user-select: none;
+  border-top: 1px solid #002244;
+  gap: 0;
+}
+.marg-statusbar .sb-section {
+  padding: 0 8px;
+  border-right: 1px solid #004488;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.marg-statusbar .sb-section:last-child { border-right: none; }
+
+/* ═══ PANEL — content container ═══ */
+.marg-panel {
+  background: #FFFFFF;
+  border: 1px solid #808080;
+}
+.marg-panel-caption {
+  background: linear-gradient(180deg, #5A8ABF 0%, #336699 100%);
+  color: #FFFFFF;
+  padding: 3px 6px;
+  font-size: 8pt;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ═══ GROUP BOX — Windows Forms GroupBox ═══ */
+.marg-groupbox {
+  border: 1px solid #C0C0C0;
+  padding: 6px;
+  margin: 0;
+  background: #FFFFFF;
+}
+.marg-groupbox legend {
+  padding: 0 6px;
+  font-size: 8pt;
+  font-weight: 700;
+  color: #003366;
+}
+
+/* ═══ FORM ROW ═══ */
+.marg-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  min-height: 20px;
+}
+.marg-label {
+  width: 90px;
+  min-width: 90px;
+  text-align: right;
+  font-size: 8pt;
+  color: #000000;
+  padding-right: 4px;
+  white-space: nowrap;
+}
+.marg-input {
+  height: 20px;
+  padding: 0 3px;
+  border: 1px solid #808080;
+  border-top-color: #404040;
+  border-left-color: #404040;
+  background: #FFFFFF;
+  font-size: 8pt;
+  font-family: Tahoma, 'Segoe UI', sans-serif;
+  color: #000000;
+  outline: none;
+  flex: 1;
+  min-width: 0;
+}
+.marg-input:focus {
+  outline: none;
+  border: 1px solid #316AC5;
+}
+.marg-input-readonly {
+  background: #F0F0F0;
+  color: #404040;
+}
+
+/* ═══ TAB CONTROL ═══ */
+.marg-tabcontrol {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #808080;
+  background: #FFFFFF;
+}
+.marg-tabstrip {
+  display: flex;
+  background: #F0F0F0;
+  border-bottom: 1px solid #808080;
+  padding: 0 2px;
+}
+.marg-tab {
+  padding: 4px 12px;
+  font-size: 8pt;
+  font-weight: 400;
+  border: 1px solid transparent;
+  border-bottom: none;
+  cursor: pointer;
+  background: transparent;
+  color: #000000;
+  margin-bottom: -1px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+.marg-tab:hover { background: #E8EFF8; }
+.marg-tab.active {
+  background: #FFFFFF;
+  border: 1px solid #808080;
+  border-bottom: 1px solid #FFFFFF;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
+}
+
+/* ═══ INFO CARDS ═══ */
+.marg-kpi {
+  background: #FFFFFF;
+  border: 1px solid #808080;
+  padding: 6px 10px;
+}
+.marg-kpi-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #003366;
+  line-height: 1.1;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+.marg-kpi-label {
+  font-size: 7pt;
+  color: #808080;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* ═══ BADGES ═══ */
+.marg-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 4px;
+  font-size: 7pt;
+  font-weight: 700;
+  border: 1px solid;
+  line-height: 16px;
+}
+.marg-badge-green { background: #E0FFE0; color: #006600; border-color: #80C080; }
+.marg-badge-red { background: #FFE0E0; color: #CC0000; border-color: #FF8080; }
+.marg-badge-orange { background: #FFF0D0; color: #CC6600; border-color: #FFB060; }
+.marg-badge-blue { background: #E0EEFF; color: #003366; border-color: #80AADD; }
+
+/* ═══ DIALOG / MODAL ═══ */
+.marg-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+}
+.marg-dialog {
+  background: #F0F0F0;
+  border: 2px solid #003366;
+  min-width: 500px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+}
+.marg-dialog-titlebar {
+  background: linear-gradient(180deg, #004D99 0%, #003366 100%);
+  color: #FFFFFF;
+  padding: 3px 8px;
+  font-size: 8pt;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 22px;
+}
+.marg-dialog-body { padding: 8px; flex: 1; overflow-y: auto; }
+.marg-dialog-footer {
+  padding: 6px 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  border-top: 1px solid #C0C0C0;
+  background: #F0F0F0;
+}
+
+/* ═══ SUNken FIELD (inset border) ═══ */
+.marg-sunken {
+  border: 1px solid #808080;
+  border-top-color: #C0C0C0;
+  border-left-color: #C0C0C0;
+  background: #FFFFFF;
+}
+
+/* ═══ RAISED FIELD (outset border) ═══ */
+.marg-raised {
+  border: 1px solid #C0C0C0;
+  border-top-color: #FFFFFF;
+  border-left-color: #FFFFFF;
+}
+
+/* ═══ PAGINATION ═══ */
+.marg-pager {
+  background: #F0F0F0;
+  border: 1px solid #808080;
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 8pt;
+}
