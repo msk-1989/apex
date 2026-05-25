@@ -433,3 +433,33 @@ Stage Summary:
 - Sidebar (TreeView) + Topbar (MenuBar + Toolbar) architecture is correct and retained
 - Removed 2 dead files, cleaned 6 unused imports
 - All navigation works: 14 modules accessible from both sidebar and topbar menus
+
+---
+Task ID: 5
+Agent: Main
+Task: Import actual inventory data from Excel - remove all dummy data
+
+Work Log:
+- Read Excel file "Medical products and data.xlsx" (849 rows, 1 sheet "Inventory_Master")
+- Analyzed columns: SR.NO., DATE, PARTY NAME, HSN NO., MFG, NAME OF PRODUCT, PKG, BATCH, EXP, MRP, QTY, FREE, RATE, AMOUNT, DISC%, GST%
+- Found 672 unique product+manufacturer combinations, 268 unique manufacturers, 27 unique suppliers, 3 GST rates (5%, 12%, 18%)
+- Converted Excel to JSON (upload/inventory_data.json) for programmatic import
+- Created optimized batch import script: prisma/import-inventory.ts
+  - Clears ALL existing data in correct dependency order (27 tables)
+  - Creates 1 default "General" category, 1 "Main Counter"
+  - Batch creates manufacturers (268) and suppliers (27) using createMany
+  - Creates 668 unique medicines with auto-detected form/unit/strips from PKG column
+  - Creates 843 medicine batches with full stock/pricing data
+  - Creates walk-in customer + admin staff with bcrypt password
+- Handled 7 rows with empty manufacturer (4 were duplicates, 3 new ones added with "UNKNOWN" mfg)
+- Verified data via API: 668 medicines returned, search works, pagination works
+- Updated db.ts to reduce query logging for production performance
+- Pushed to GitHub: msk-1989/apex
+
+Stage Summary:
+- ALL dummy/seed data removed from Neon database
+- Real inventory imported: 668 medicines, 843 batches, 268 manufacturers, 27 suppliers
+- Total stock: 7,830+ units, Total value: ₹5,77,297+
+- GST rates: 5%, 12%, 18% (from Excel data)
+- Import script: prisma/import-inventory.ts (reusable for future imports)
+- API verified: /api/medicines returns correct data with search and pagination
