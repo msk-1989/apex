@@ -6,11 +6,12 @@ import {
   Save, Trash2, Printer, Search, RefreshCw,
   Cross, CalendarDays, Bell, ChevronLeft, ChevronRight as ChevronForward,
   FilePlus, Edit, FolderOpen, Folder, FileText,
-  Info, Shield, Download, Upload, MessageSquare,
+  Info, Shield, Download, Upload, MessageSquare, LogOut,
 } from 'lucide-react'
 import { useNavStore, type ModuleId } from '@/store/nav-store'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { LoginPage } from '@/components/auth/LoginPage'
 
 /* ═══════════════════════════════════════════════════════
    MARG ERP 9+ — Exact Application Frame
@@ -785,7 +786,7 @@ function getDateSnapshot() { return new Date().toLocaleDateString('en-IN', { day
 function getTimeSnapshot() { return new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) }
 
 // ── STATUS BAR ──
-function StatusBar() {
+function StatusBar({ user, onLogout }: { user: { name: string; role: string } | null; onLogout: () => void }) {
   const { activeModule } = useNavStore()
   const now = useSyncExternalStore(subscribeTime, getDateSnapshot, () => serverSnapshot)
   const time = useSyncExternalStore(subscribeTime, getTimeSnapshot, () => serverSnapshot)
@@ -804,13 +805,23 @@ function StatusBar() {
       </div>
       <div className="sb-section">{names[activeModule]}</div>
       <div className="sb-section">Counter: A</div>
-      <div className="sb-section">User: Admin</div>
+      <div className="sb-section">User: {user?.name || 'Admin'}</div>
       <div className="sb-section flex-1" />
       <div className="sb-section">{now}</div>
       <div className="sb-section">{time}</div>
       <div className="sb-section" style={{ color: '#FFCC00' }}>
         ● DAY OPEN
       </div>
+      {user && (
+        <button
+          className="sb-section flex items-center gap-1 cursor-pointer hover:bg-[#C04040] hover:text-white transition-colors"
+          onClick={onLogout}
+          title="Sign Out"
+        >
+          <LogOut className="h-3 w-3" />
+          Logout
+        </button>
+      )}
       <div className="sb-section">F1:Help</div>
     </div>
   )
@@ -833,6 +844,11 @@ let historyIndex = 0
 
 // ── MAIN LAYOUT ──
 export function AppLayout({ children }: { children: React.ReactNode }) {
+  // Auth state (must be first - before any conditional returns)
+  const [user, setUser] = useState<{ id: string; name: string; email: string | null; role: string } | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
+
+  // All other hooks (must come before conditional returns)
   const { sidebarCollapsed, toggleSidebarCollapsed, setActiveModule, activeModule } = useNavStore()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -840,11 +856,36 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [treeExpand, setTreeExpand] = useState<boolean | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
+  // Check existing session on mount
+  useEffect(() => {
+    fetch('/api/auth')
+      .then(r => r.json())
+      .then(d => {
+        if (d.authenticated && d.user) {
+          setUser(d.user)
+        }
+        setAuthChecked(true)
+      })
+      .catch(() => setAuthChecked(true))
+  }, [])
+
   useEffect(() => {
     const fn = () => setIsMobile(window.innerWidth < 768)
     fn()
     window.addEventListener('resize', fn)
     return () => window.removeEventListener('resize', fn)
+  }, [])
+
+  const handleLogin = useCallback((userData: { id: string; name: string; email: string | null; role: string }) => {
+    setUser(userData)
+  }, [])
+
+  const handleLogout = useCallback(async () => {
+    try {
+      await fetch('/api/auth', { method: 'DELETE' })
+    } catch { /* ignore */ }
+    setUser(null)
+    toast.success('Logged out successfully')
   }, [])
 
   const handleNav = useCallback((id: ModuleId) => {
@@ -971,6 +1012,22 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [handleAction, activeDialog])
 
+  // ── Auth gates (after all hooks) ──
+  if (!authChecked) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center" style={{ background: '#002040' }}>
+        <div className="text-center">
+          <Cross className="h-10 w-10 text-[#3399FF] mx-auto mb-3 animate-pulse" strokeWidth={2} />
+          <div className="text-sm text-blue-200">Loading PharmaCare ERP...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <LoginPage onLogin={handleLogin} />
+  }
+
   return (
     <div className="flex h-screen w-screen flex-col overflow-hidden" style={{ background: '#E8E8E8' }}>
       {/* Windows app frame */}
@@ -1040,7 +1097,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      <StatusBar />
+      <StatusBar user={user} onLogout={handleLogout} />
 
       {/* ── DIALOGS ── */}
       {activeDialog === 'about' && <AboutDialog onClose={() => setActiveDialog(null)} />}

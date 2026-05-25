@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { hash } from 'bcryptjs'
 
 export async function POST(request: NextRequest) {
   try {
@@ -90,9 +91,9 @@ export async function POST(request: NextRequest) {
 
     // ============ STAFF ============
     const staffData = [
-      { name: 'Admin User', email: 'admin@pharmacy.com', phone: '9999999001', role: 'admin', password: 'admin123' },
-      { name: 'Dr. Meera Patel', email: 'meera@pharmacy.com', phone: '9999999002', role: 'pharmacist', password: 'pharm123' },
-      { name: 'Rahul Verma', email: 'rahul@pharmacy.com', phone: '9999999003', role: 'salesman', password: 'sales123' },
+      { name: 'Admin User', email: 'admin@pharmacy.com', phone: '9999999001', role: 'admin', password: await hash('admin123', 10) },
+      { name: 'Dr. Meera Patel', email: 'meera@pharmacy.com', phone: '9999999002', role: 'pharmacist', password: await hash('pharm123', 10) },
+      { name: 'Rahul Verma', email: 'rahul@pharmacy.com', phone: '9999999003', role: 'salesman', password: await hash('sales123', 10) },
     ]
     const staffList = await Promise.all(
       staffData.map(s => db.staff.create({ data: s }))
