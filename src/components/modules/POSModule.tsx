@@ -581,6 +581,8 @@ export default function POSModule() {
   const raw = subtot - totDisc + totGst
   const roundOff = Math.round(raw) - raw
   const grand = Math.round(raw)
+  const taxable = +(subtot - totDisc).toFixed(2)
+  const discPct = subtot > 0 ? +((totDisc / subtot) * 100).toFixed(1) : 0
   const totQty = cart.reduce((s, i) => s + i.quantity, 0)
   const cashVal = parseFloat(cashIn) || 0
   const change = cashVal - grand
@@ -817,7 +819,11 @@ export default function POSModule() {
               <span className={`marg-badge ${item.expiryStatus === 'critical' ? 'marg-badge-red' : 'marg-badge-orange'}`}>
                 {item.expiryStatus === 'critical' ? '\u26D4 Critical' : '\u26A0 Exp ' + shortDate(item.expiryDate)}
               </span>
-              <span style={{ color: '#808080' }}>({item.expiryDiscount}% disc available)</span>
+              {item.expiryDiscount > 0 ? (
+                <span className="marg-badge marg-badge-green" style={{ fontSize: '7pt' }}>({item.expiryDiscount}% Applied)</span>
+              ) : (
+                <span style={{ color: '#808080' }}>({getExpiryDiscount(item.expiryStatus)}% disc available)</span>
+              )}
               {item.expiryDiscount === 0 && (
                 <button className="marg-btn" style={{ height: '15px', fontSize: '7pt', padding: '0 4px', minWidth: '40px' }}
                   onClick={() => applyExpiryDiscount(item.id)}>Apply</button>
@@ -1085,7 +1091,7 @@ export default function POSModule() {
                     <tr>
                       <th style={{ width: '22px', textAlign: 'center' }}>#</th>
                       <th style={{ width: 'auto' }}>Medicine</th>
-                      <th style={{ width: '46px', textAlign: 'center' }}>Batch</th>
+                      <th style={{ width: '72px', textAlign: 'center' }}>Batch</th>
                       <th style={{ width: '36px', textAlign: 'center' }}>Exp</th>
                       <th style={{ width: '60px', textAlign: 'center' }}>Qty</th>
                       <th style={{ width: '24px', textAlign: 'center' }}>Free</th>
@@ -1130,7 +1136,7 @@ export default function POSModule() {
                             )}
                           </div>
                           <div style={{ color: '#808080', fontSize: '7pt', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {item.strength} \u00B7 {item.form} \u00B7 {item.manufacturer}
+                            {[item.strength, item.form, item.manufacturer].filter(Boolean).join(' \u00B7 ')}
                             {item.unitConversion && (
                               <span style={{ color: '#003366', marginLeft: '4px' }}>
                                 1 {item.unitConversion.fromUnit} = {item.unitConversion.factor} {item.unitConversion.toUnit}
@@ -1174,7 +1180,7 @@ export default function POSModule() {
                             min={0} max={100} placeholder="0" />
                         </td>
                         {/* GST% */}
-                        <td style={{ textAlign: 'center', color: '#808080', fontSize: '7pt' }}>{item.gstRate}</td>
+                        <td style={{ textAlign: 'center', color: '#808080', fontSize: '7pt' }}>{item.gstRate}%</td>
                         {/* Amount */}
                         <td style={{ textAlign: 'right', fontWeight: 700, fontSize: '7pt' }}>{cur(itemNet(item))}</td>
                         {/* Remove */}
@@ -1232,8 +1238,16 @@ export default function POSModule() {
             <div className="marg-panel-caption"><span>Bill Summary</span></div>
             <div style={{ padding: '4px 6px' }}>
               <div className="marg-field">
-                <span className="marg-label">Subtotal:</span>
+                <span className="marg-label">Subtotal (Gross):</span>
                 <span style={{ flex: 1, textAlign: 'right', fontWeight: 600 }}>{cur(subtot)}</span>
+              </div>
+              <div className="marg-field">
+                <span className="marg-label" style={{ color: '#CC0000' }}>(-) Discount:</span>
+                <span style={{ flex: 1, textAlign: 'right', color: '#CC0000', fontWeight: 600 }}>\u2212 {cur(totDisc)} ({discPct}%)</span>
+              </div>
+              <div className="marg-field">
+                <span className="marg-label">Taxable Amount:</span>
+                <span style={{ flex: 1, textAlign: 'right', fontWeight: 600 }}>{cur(taxable)}</span>
               </div>
               <div className="marg-field">
                 <span className="marg-label">CGST ({gstLabel}%):</span>
@@ -1242,10 +1256,6 @@ export default function POSModule() {
               <div className="marg-field">
                 <span className="marg-label">SGST ({gstLabel}%):</span>
                 <span style={{ flex: 1, textAlign: 'right' }}>{cur(sgst)}</span>
-              </div>
-              <div className="marg-field">
-                <span className="marg-label" style={{ color: '#CC0000' }}>Discount:</span>
-                <span style={{ flex: 1, textAlign: 'right', color: '#CC0000', fontWeight: 600 }}>\u2212 {cur(totDisc)}</span>
               </div>
               {totalFreeQty > 0 && (
                 <div className="marg-field">
